@@ -1,4 +1,4 @@
-
+use rusqlite::{Result, Connection};
 pub enum ToDoOption {
     Add,
     Delete,
@@ -6,3 +6,4 @@ pub enum ToDoOption {
     Exit,
 }
 
+// Initialize Database
