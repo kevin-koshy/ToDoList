@@ -1,6 +1,7 @@
 use std::{io,thread};
 use std::time::Duration;
 use console::{Term, style};
+use ToDoList::{match_task, ToDoOption};
 
 fn main() {
 
@@ -14,13 +15,19 @@ fn main() {
     io::stdin().read_line(&mut input).expect("Failed to read line");
     println!("You entered:   {}", input);
 
-    match input.as_str().trim() {
-        "1" => {
-            println!("Enter the task");
-            
-        }
-        _ => {
-            println!("Invalid option");
-        }
-    }
+    let as_enum: ToDoOption = input.trim().parse().unwrap();
+    println!("You entered:   {:?}", as_enum);
+
+
+    // match_task(ToDoOption::Edit);
+
+    // match input.as_str().trim() {
+    //     "1" => {
+    //         println!("Enter the task");
+    //
+    //     }
+    //     _ => {
+    //         println!("Invalid option");
+    //     }
+    // }
 }
