@@ -16,5 +16,5 @@ fn main() {
      let as_enum: ToDoOption = input.trim().parse().unwrap();
 
     match_task(as_enum);
-
+    println!("Number of logical cores is {}", num_cpus::get());
 }

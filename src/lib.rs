@@ -1,7 +1,11 @@
 use std::io;
 use rusqlite::{Result, Connection};
 
-
+#[derive(Debug)]
+struct Task {
+    id: u8,
+    task: String,
+}
 #[derive(Debug)]
 pub enum ToDoOption {
     Add,
@@ -88,9 +92,19 @@ fn edit_task(item_to_edit:String, new_task:String) -> Result<(), rusqlite::Error
 fn display_tasks() {
     let conn = Connection::open("todo.db").unwrap();
     let mut stmt = conn.prepare("SELECT * FROM users").unwrap();
-    let rows = stmt.query_map([],|row| row.get::<usize,String>(1)).unwrap();
-    for row in rows {
-        println!("{}", row.unwrap());
-    }
+    // let rows = stmt.query_map([],|row| row.get::<usize,String>(1)).unwrap();
+    // let rows = stmt.query_map([],|row| row.get::<usize,String>(1)).unwrap();
+    // for row in rows {
+    //     println!("{}", row.unwrap());
+    // }
 
+    let tasks = stmt.query_map([],|row|{
+        Ok(Task{
+            id: row.get(0)?,
+            task: row.get(1)?,
+        })
+    }).unwrap();
+    for task in tasks {
+        println!("{:?}: {:?}", task.as_ref().unwrap().id, task.as_ref().unwrap().task);
     }
+}
