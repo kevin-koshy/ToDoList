@@ -13,21 +13,28 @@ fn main() {
 
     let mut input: String = String::new();
     io::stdin().read_line(&mut input).expect("Failed to read line");
-    println!("You entered:   {}", input);
-
-    let as_enum: ToDoOption = input.trim().parse().unwrap();
-    println!("You entered:   {:?}", as_enum);
+     let as_enum: ToDoOption = input.trim().parse().unwrap();
+    // println!("You entered:   {:?}", as_enum);
 
 
-    // match_task(ToDoOption::Edit);
+    match_task(as_enum);
 
-    // match input.as_str().trim() {
-    //     "1" => {
-    //         println!("Enter the task");
-    //
-    //     }
-    //     _ => {
-    //         println!("Invalid option");
-    //     }
-    // }
+    match input.as_str().trim() {
+        "1" => {
+            println!("Enter the tasks to add. 1");
+        }
+        "2" => {
+            println!("Enter the task to delete");
+        }
+        "3" => {
+            println!("Enter the task to edit");
+        }
+        "4" => {
+            println!("Exiting..");
+        }
+        _ => {
+            println!("Invalid option");
+        }
+
+    }
 }
