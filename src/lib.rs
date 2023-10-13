@@ -31,14 +31,14 @@ pub fn match_task(task:ToDoOption) -> (){
             println!("Enter the task to add");
             let mut task = String::new();
             io::stdin().read_line(&mut task).expect("Failed to read line");
-            create_connection(task.trim().to_string());
+            create_connection(task.trim().to_string()).ok();
             println!("You entered:   {:?}", task.trim());
         }
         ToDoOption::Delete => {
             println!("Enter the task to delete");
             let mut task_delete = String::new();
             io::stdin().read_line(&mut task_delete).expect("Failed to read line");
-            delete_task(task_delete.trim().to_string());
+            delete_task(task_delete.trim().to_string()).ok();
             println!("You entered:   {:?}", task_delete.trim());
 
         }
@@ -49,14 +49,14 @@ pub fn match_task(task:ToDoOption) -> (){
             println!("Enter the new task");
             let mut new_task = String::new();
             io::stdin().read_line(&mut new_task).expect("Failed to read line");
-            edit_task(task_edit.trim().to_string(), new_task.trim().to_string());
+            edit_task(task_edit.trim().to_string(), new_task.trim().to_string()).ok();
             println!("You entered:   {:?}", task_edit.trim());
         }
         ToDoOption::Exit => {
             println!("Exiting");
         }
         ToDoOption::Display => {
-            println!("Displaying");
+            println!("Displaying current tasks..");
             display_tasks();
         }
     }
@@ -67,7 +67,7 @@ fn create_connection(task: String) -> Result<Connection, rusqlite::Error> {
     conn.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, ITEMS TEXT NOT NULL)",(),)?;
     println!("Table created");
     conn.execute("INSERT INTO users (ITEMS) VALUES (?1)", [&task])?;
-    println!("Task adde3d");
+    println!("Task added");
     Ok(conn)
     }
 
@@ -85,12 +85,12 @@ fn edit_task(item_to_edit:String, new_task:String) -> Result<(), rusqlite::Error
     Ok(())
 }
 
-fn display_tasks() -> Result<(), rusqlite::Error>{
-    let conn = Connection::open("todo.db")?;
-    let mut stmt = conn.prepare("SELECT * FROM users")?;
-    let mut rows = stmt.query([])?;
-    while let Some(row) = rows.next()? {
-        println!("{}: {}", row.get(0), row.get(1));
+fn display_tasks() {
+    let conn = Connection::open("todo.db").unwrap();
+    let mut stmt = conn.prepare("SELECT * FROM users").unwrap();
+    let rows = stmt.query_map([],|row| row.get::<usize,String>(1)).unwrap();
+    for row in rows {
+        println!("{}", row.unwrap());
     }
-    Ok(())
-}
+
+    }
